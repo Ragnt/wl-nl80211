@@ -11,7 +11,6 @@ use crate::{
 pub struct Nl80211InterfaceGetRequest {
     handle: Nl80211Handle,
     message: Nl80211Message,
-    dump: bool,
 }
 
 impl Nl80211InterfaceGetRequest {
@@ -22,7 +21,6 @@ impl Nl80211InterfaceGetRequest {
                 cmd: Nl80211Command::GetInterface,
                 attributes: vec![],
             },
-            dump: true,
         }
     }
 
@@ -30,7 +28,7 @@ impl Nl80211InterfaceGetRequest {
         self,
     ) -> impl TryStream<Ok = GenlMessage<Nl80211Message>, Error = Nl80211Error>
     {
-        let Nl80211InterfaceGetRequest { mut handle, message, dump } = self;
+        let Nl80211InterfaceGetRequest { mut handle, message } = self;
 
         let nl80211_msg = Nl80211Message {
             cmd: Nl80211Command::GetInterface,
