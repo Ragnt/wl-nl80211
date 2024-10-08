@@ -2,6 +2,7 @@
 
 mod combination;
 mod get;
+mod set;
 mod handle;
 mod iface_type;
 

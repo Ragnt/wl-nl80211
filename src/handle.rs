@@ -65,8 +65,9 @@ impl Nl80211Handle {
 pub(crate) async fn nl80211_execute(
     handle: &mut Nl80211Handle,
     nl80211_msg: Nl80211Message,
+    dump: bool,
 ) -> impl TryStream<Ok = GenlMessage<Nl80211Message>, Error = Nl80211Error> {
-    let nl_header_flags = NLM_F_REQUEST | NLM_F_DUMP;
+    let nl_header_flags = if dump { NLM_F_REQUEST | NLM_F_DUMP } else { NLM_F_REQUEST };
 
     let mut nl_msg =
         NetlinkMessage::from(GenlMessage::from_payload(nl80211_msg));

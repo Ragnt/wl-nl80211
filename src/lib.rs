@@ -77,7 +77,7 @@ pub use self::wifi7::{
 };
 pub use self::wiphy::{
     Nl80211Band, Nl80211BandInfo, Nl80211BandType, Nl80211BandTypes,
-    Nl80211CipherSuit, Nl80211Frequency, Nl80211FrequencyInfo, Nl80211IfMode,
+    Nl80211CipherSuite, Nl80211Frequency, Nl80211FrequencyInfo, Nl80211IfMode,
     Nl80211WiphyGetRequest, Nl80211WiphyHandle, Nl80211WowlanTcpTrigerSupport,
     Nl80211WowlanTrigerPatternSupport, Nl80211WowlanTrigersSupport,
 };

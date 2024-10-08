@@ -29,6 +29,8 @@
  *
  */
 
+use core::fmt;
+
 use anyhow::Context;
 use netlink_packet_utils::{
     nla::{DefaultNla, Nla, NlaBuffer, NlasIterator},

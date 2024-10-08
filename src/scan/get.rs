@@ -33,6 +33,6 @@ impl Nl80211ScanGetRequest {
             attributes,
         };
 
-        nl80211_execute(&mut handle, nl80211_msg).await
+        nl80211_execute(&mut handle, nl80211_msg, true).await
     }
 }

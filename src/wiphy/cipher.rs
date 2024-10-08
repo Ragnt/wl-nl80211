@@ -15,7 +15,7 @@ const WLAN_CIPHER_SUITE_BIP_CMAC_256: u32 = 0x000FAC << 8 | 13;
 const WLAN_CIPHER_SUITE_SMS4: u32 = 0x001472 << 8 | 1;
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
-pub enum Nl80211CipherSuit {
+pub enum Nl80211CipherSuite {
     UseGroup,
     Wep40,
     Tkip,
@@ -32,7 +32,7 @@ pub enum Nl80211CipherSuit {
     Other(u32),
 }
 
-impl From<u32> for Nl80211CipherSuit {
+impl From<u32> for Nl80211CipherSuite {
     fn from(d: u32) -> Self {
         match d {
             WLAN_CIPHER_SUITE_USE_GROUP => Self::UseGroup,
@@ -53,23 +53,23 @@ impl From<u32> for Nl80211CipherSuit {
     }
 }
 
-impl From<Nl80211CipherSuit> for u32 {
-    fn from(v: Nl80211CipherSuit) -> u32 {
+impl From<Nl80211CipherSuite> for u32 {
+    fn from(v: Nl80211CipherSuite) -> u32 {
         match v {
-            Nl80211CipherSuit::UseGroup => WLAN_CIPHER_SUITE_USE_GROUP,
-            Nl80211CipherSuit::Wep40 => WLAN_CIPHER_SUITE_WEP40,
-            Nl80211CipherSuit::Tkip => WLAN_CIPHER_SUITE_TKIP,
-            Nl80211CipherSuit::Ccmp => WLAN_CIPHER_SUITE_CCMP,
-            Nl80211CipherSuit::Wep104 => WLAN_CIPHER_SUITE_WEP104,
-            Nl80211CipherSuit::AesCmac => WLAN_CIPHER_SUITE_AES_CMAC,
-            Nl80211CipherSuit::Gcmp => WLAN_CIPHER_SUITE_GCMP,
-            Nl80211CipherSuit::Gcmp256 => WLAN_CIPHER_SUITE_GCMP_256,
-            Nl80211CipherSuit::Ccmp256 => WLAN_CIPHER_SUITE_CCMP_256,
-            Nl80211CipherSuit::BipGmac128 => WLAN_CIPHER_SUITE_BIP_GMAC_128,
-            Nl80211CipherSuit::BipGmac256 => WLAN_CIPHER_SUITE_BIP_GMAC_256,
-            Nl80211CipherSuit::BipCmac256 => WLAN_CIPHER_SUITE_BIP_CMAC_256,
-            Nl80211CipherSuit::Sms4 => WLAN_CIPHER_SUITE_SMS4,
-            Nl80211CipherSuit::Other(d) => d,
+            Nl80211CipherSuite::UseGroup => WLAN_CIPHER_SUITE_USE_GROUP,
+            Nl80211CipherSuite::Wep40 => WLAN_CIPHER_SUITE_WEP40,
+            Nl80211CipherSuite::Tkip => WLAN_CIPHER_SUITE_TKIP,
+            Nl80211CipherSuite::Ccmp => WLAN_CIPHER_SUITE_CCMP,
+            Nl80211CipherSuite::Wep104 => WLAN_CIPHER_SUITE_WEP104,
+            Nl80211CipherSuite::AesCmac => WLAN_CIPHER_SUITE_AES_CMAC,
+            Nl80211CipherSuite::Gcmp => WLAN_CIPHER_SUITE_GCMP,
+            Nl80211CipherSuite::Gcmp256 => WLAN_CIPHER_SUITE_GCMP_256,
+            Nl80211CipherSuite::Ccmp256 => WLAN_CIPHER_SUITE_CCMP_256,
+            Nl80211CipherSuite::BipGmac128 => WLAN_CIPHER_SUITE_BIP_GMAC_128,
+            Nl80211CipherSuite::BipGmac256 => WLAN_CIPHER_SUITE_BIP_GMAC_256,
+            Nl80211CipherSuite::BipCmac256 => WLAN_CIPHER_SUITE_BIP_CMAC_256,
+            Nl80211CipherSuite::Sms4 => WLAN_CIPHER_SUITE_SMS4,
+            Nl80211CipherSuite::Other(d) => d,
         }
     }
 }
