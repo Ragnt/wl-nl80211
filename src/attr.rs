@@ -445,6 +445,8 @@ const NL80211_ATTR_MAX_HW_TIMESTAMP_PEERS: u16 = 323;
 // const NL80211_ATTR_WIPHY_RADIOS:u16 = 331;
 // const NL80211_ATTR_WIPHY_INTERFACE_COMBINATIONS:u16 = 332;
 
+pub const ETH_ALEN: usize = 6;
+
 #[derive(Debug, PartialEq, Eq, Clone)]
 #[non_exhaustive]
 pub enum Nl80211Attr {
@@ -628,17 +630,13 @@ impl Nla for Nl80211Attr {
             | Self::TransmitQueueMemoryLimit(_)
             | Self::TransmitQueueQuantum(_)
             | Self::SchedScanInterval(_)
-<<<<<<< HEAD
             | Self::ApSettingsFlags(_)
             | Self::SchedScanDelay(_) => 4,
             Self::Wdev(_) => 8,
             Self::Ssid(s) => s.len(),
             Self::IfName(s) | Self::WiphyName(s) | Self::RegAlpha2(s) => s.len() + 1,
-=======
-            | Self::SchedScanDelay(_) => 4,
             Self::Wdev(_) => 8,
             Self::IfName(s) | Self::Ssid(s) | Self::WiphyName(s) => s.len() + 1,
->>>>>>> c0dcf88 (scan: Add scan trigger and schedule support)
             Self::Mac(_) | Self::MacMask(_) => ETH_ALEN,
             Self::MacAddrs(s) => {
                 MacAddressNlas::from(s).as_slice().buffer_len()
