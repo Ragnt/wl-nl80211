@@ -209,7 +209,7 @@ const NL80211_ATTR_WIPHY_COVERAGE_CLASS: u16 = 89;
 // const NL80211_ATTR_TX_RATES:u16 = 90;
 // const NL80211_ATTR_FRAME_MATCH:u16 = 91;
 // const NL80211_ATTR_ACK:u16 = 92;
-// const NL80211_ATTR_PS_STATE:u16 = 93;
+const NL80211_ATTR_PS_STATE:u16 = 93;
 // const NL80211_ATTR_CQM:u16 = 94;
 // const NL80211_ATTR_LOCAL_STATE_CHANGE:u16 = 95;
 // const NL80211_ATTR_AP_ISOLATE:u16 = 96;
@@ -452,7 +452,7 @@ const NL80211_ATTR_MAX_HW_TIMESTAMP_PEERS: u16 = 323;
 // const NL80211_ATTR_WIPHY_RADIOS:u16 = 331;
 // const NL80211_ATTR_WIPHY_INTERFACE_COMBINATIONS:u16 = 332;
 
-const ETH_ALEN: usize = 6;
+pub const ETH_ALEN: usize = 6;
 
 #[derive(Debug, PartialEq, Eq, Clone)]
 #[non_exhaustive]
@@ -475,6 +475,7 @@ pub enum Nl80211Attr {
     CenterFreq1(u32),
     CenterFreq2(u32),
     WiphyTxPowerLevel(u32),
+    PsState(u32),
     Ssid(String),
     StationInfo(Vec<Nl80211StationInfo>),
     TransmitQueueStats(Vec<Nl80211TransmitQueueStat>),
@@ -562,6 +563,7 @@ impl Nla for Nl80211Attr {
             | Self::CenterFreq1(_)
             | Self::CenterFreq2(_)
             | Self::WiphyTxPowerLevel(_)
+            | Self::PsState(_)
             | Self::ChannelWidth(_)
             | Self::WiphyFragThreshold(_)
             | Self::WiphyRtsThreshold(_)
@@ -653,6 +655,7 @@ impl Nla for Nl80211Attr {
             Self::Generation(_) => NL80211_ATTR_GENERATION,
             Self::Use4Addr(_) => NL80211_ATTR_4ADDR,
             Self::WiphyFreq(_) => NL80211_ATTR_WIPHY_FREQ,
+            Self::PsState(_) => NL80211_ATTR_PS_STATE,
             Self::WiphyFreqOffset(_) => NL80211_ATTR_WIPHY_FREQ_OFFSET,
             Self::WiphyChannelType(_) => NL80211_ATTR_WIPHY_CHANNEL_TYPE,
             Self::ChannelWidth(_) => NL80211_ATTR_CHANNEL_WIDTH,
@@ -749,6 +752,7 @@ impl Nla for Nl80211Attr {
             | Self::WiphyTxPowerLevel(d)
             | Self::WiphyFragThreshold(d)
             | Self::WiphyRtsThreshold(d)
+            | Self::PsState(d)
             | Self::WiphyAntennaAvailTx(d)
             | Self::WiphyAntennaAvailRx(d)
             | Self::ApProbeRespOffload(d)
@@ -867,6 +871,11 @@ impl<'a, T: AsRef<[u8]> + ?Sized> Parseable<NlaBuffer<&'a T>> for Nl80211Attr {
                 let err_msg =
                     format!("Invalid NL80211_ATTR_IFNAME value {:?}", payload);
                 Self::IfName(parse_string(payload).context(err_msg)?)
+            }
+            NL80211_ATTR_PS_STATE => {
+                let err_msg =
+                    format!("Invalid NL80211_ATTR_PS_STATE value {:?}", payload);
+                Self::PsState(parse_u32(payload).context(err_msg)?)
             }
             NL80211_ATTR_IFTYPE => {
                 Self::IfType(Nl80211InterfaceType::parse(payload)?)
