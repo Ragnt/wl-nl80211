@@ -29,6 +29,13 @@ impl Nl80211InterfaceHandle {
 
     /// Set wireless interface info
     /// (equivalent to `iw dev set channel`)
+    /// as_channel(freq: u32) // 20Mhz Channel
+    /// as_ht40_plus_channel(freq: u32) // HT40+ Channel
+    /// as_ht40_minus_channel(freq: u32) // HT40- Channel
+    /// as_vht80_channel(freq: u32, center_freq1: u32) // VHT 80MHz Channel
+    /// as_vht160_channel(freq: u32, center_freq1: u32) // VHT 160 Channel
+    /// as_vht80p80_channel(freq: u32, center_freq1: u32, center_freq2: u32) // VHT 80+80 Mhz
+    /// as_eht320_channel(freq: u32, center_freq1: u32) // EHT 320MHz Channel
     pub fn channel_set(&mut self, index: u32) -> Nl80211InterfaceSetChannelRequest {
         Nl80211InterfaceSetChannelRequest::new(self.0.clone(), index)
     }
