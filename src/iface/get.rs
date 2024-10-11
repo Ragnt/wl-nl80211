@@ -42,9 +42,9 @@ impl Nl80211InterfaceGetRequest {
     }
 
     /// Lookup a interface by name
-    pub fn match_name(mut self, name: &str) -> Self {
+    pub fn match_name(mut self, name: String) -> Self {
         self.dump = false;
-        self.message.attributes.push(Nl80211Attr::IfName(name.to_string()));
+        self.message.attributes.push(Nl80211Attr::IfName(name));
         self
     }
     
