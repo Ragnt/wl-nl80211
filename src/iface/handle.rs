@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-use crate::{Nl80211Handle, Nl80211InterfaceGetRequest};
+use crate::{Nl80211FrameType, Nl80211Handle, Nl80211InterfaceGetRequest};
 
-use super::set::{Nl80211InterfaceSetChannelRequest, Nl80211InterfaceSetRequest};
+use super::{ap::Nl80211RegisterFrame, set::{Nl80211InterfaceSetChannelRequest, Nl80211InterfaceSetRequest}};
 
 pub struct Nl80211InterfaceHandle(Nl80211Handle);
 
@@ -39,4 +39,11 @@ impl Nl80211InterfaceHandle {
     pub fn channel_set(&mut self, index: u32) -> Nl80211InterfaceSetChannelRequest {
         Nl80211InterfaceSetChannelRequest::new(self.0.clone(), index)
     }
+
+    /// Register a Frame Type to recieve over the unsolicited socket
+    /// an example of this would be if establishing an access point
+    pub fn register_frame(&mut self, index: u32, frame_type: Nl80211FrameType) -> Nl80211RegisterFrame {
+        Nl80211RegisterFrame::new(self.0.clone(), index, frame_type)
+    }
+    
 }

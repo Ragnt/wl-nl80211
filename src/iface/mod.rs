@@ -3,8 +3,10 @@
 mod combination;
 mod get;
 mod set;
+mod new;
 mod handle;
 mod iface_type;
+mod ap;
 
 pub use self::combination::{
     Nl80211IfaceComb, Nl80211IfaceCombAttribute, Nl80211IfaceCombLimit,
