@@ -37,16 +37,7 @@ use netlink_packet_utils::{
 };
 
 use crate::{
-    bytes::{write_u16, write_u32, write_u64},
-    wiphy::Nl80211Commands,
-    Nl80211Band, Nl80211BandTypes, Nl80211BssInfo, Nl80211ChannelWidth,
-    Nl80211CipherSuite, Nl80211Command, Nl80211ExtFeature, Nl80211ExtFeatures,
-    Nl80211ExtendedCapability, Nl80211Features, Nl80211HtCapabilityMask,
-    Nl80211HtWiphyChannelType, Nl80211IfMode, Nl80211IfTypeExtCapa,
-    Nl80211IfTypeExtCapas, Nl80211IfaceComb, Nl80211IfaceFrameType,
-    Nl80211InterfaceType, Nl80211InterfaceTypes, Nl80211MloLink,
-    Nl80211StationInfo, Nl80211TransmitQueueStat, Nl80211VhtCapability,
-    Nl80211WowlanTrigersSupport,
+    bytes::{write_u16, write_u32, write_u64}, reg::{Nl80211RegDomType, Nl80211RegdomInitiator}, wiphy::Nl80211Commands, Nl80211Band, Nl80211BandTypes, Nl80211BssInfo, Nl80211ChannelWidth, Nl80211CipherSuite, Nl80211Command, Nl80211ExtFeature, Nl80211ExtFeatures, Nl80211ExtendedCapability, Nl80211Features, Nl80211FrameType, Nl80211HtCapabilityMask, Nl80211HtWiphyChannelType, Nl80211IfMode, Nl80211IfTypeExtCapa, Nl80211IfTypeExtCapas, Nl80211IfaceComb, Nl80211IfaceFrameType, Nl80211InterfaceType, Nl80211InterfaceTypes, Nl80211MloLink, Nl80211StationInfo, Nl80211TransmitQueueStat, Nl80211VhtCapability, Nl80211WowlanTrigersSupport
 };
 
 struct MacAddressNlas(Vec<MacAddressNla>);
@@ -128,10 +119,10 @@ pub const NL80211_ATTR_MAC: u16 = 6;
 // pub const NL80211_ATTR_KEY_CIPHER:u16 = 9;
 // pub const NL80211_ATTR_KEY_SEQ:u16 = 10;
 // pub const NL80211_ATTR_KEY_DEFAULT:u16 = 11;
-// pub const NL80211_ATTR_BEACON_INTERVAL:u16 = 12;
-// pub const NL80211_ATTR_DTIM_PERIOD:u16 = 13;
-// pub const NL80211_ATTR_BEACON_HEAD:u16 = 14;
-// pub const NL80211_ATTR_BEACON_TAIL:u16 = 15;
+pub const NL80211_ATTR_BEACON_INTERVAL:u16 = 12;
+pub const NL80211_ATTR_DTIM_PERIOD:u16 = 13;
+pub const NL80211_ATTR_BEACON_HEAD:u16 = 14;
+pub const NL80211_ATTR_BEACON_TAIL:u16 = 15;
 // pub const NL80211_ATTR_STA_AID:u16 = 16;
 // pub const NL80211_ATTR_STA_FLAGS:u16 = 17;
 // pub const NL80211_ATTR_STA_LISTEN_INTERVAL:u16 = 18;
@@ -149,7 +140,7 @@ pub const NL80211_ATTR_WIPHY_BANDS: u16 = 22;
 // pub const NL80211_ATTR_BSS_SHORT_SLOT_TIME:u16 = 30;
 // pub const NL80211_ATTR_HT_CAPABILITY:u16 = 31;
 pub const NL80211_ATTR_SUPPORTED_IFTYPES: u16 = 32;
-// pub const NL80211_ATTR_REG_ALPHA2:u16 = 33;
+pub const NL80211_ATTR_REG_ALPHA2:u16 = 33;
 // pub const NL80211_ATTR_REG_RULES:u16 = 34;
 // pub const NL80211_ATTR_MESH_CONFIG:u16 = 35;
 // pub const NL80211_ATTR_BSS_BASIC_RATES:u16 = 36;
@@ -158,14 +149,14 @@ pub const NL80211_ATTR_WIPHY_FREQ: u16 = 38;
 pub const NL80211_ATTR_WIPHY_CHANNEL_TYPE: u16 = 39;
 // pub const NL80211_ATTR_KEY_DEFAULT_MGMT:u16 = 40;
 // pub const NL80211_ATTR_MGMT_SUBTYPE:u16 = 41;
-// pub const NL80211_ATTR_IE:u16 = 42;
+pub const NL80211_ATTR_IE:u16 = 42;
 pub const NL80211_ATTR_MAX_NUM_SCAN_SSIDS: u16 = 43;
 // pub const NL80211_ATTR_SCAN_FREQUENCIES:u16 = 44;
 // pub const NL80211_ATTR_SCAN_SSIDS:u16 = 45;
 pub const NL80211_ATTR_GENERATION: u16 = 46;
 pub const NL80211_ATTR_BSS: u16 = 47;
-// pub const NL80211_ATTR_REG_INITIATOR:u16 = 48;
-// pub const NL80211_ATTR_REG_TYPE:u16 = 49;
+pub const NL80211_ATTR_REG_INITIATOR:u16 = 48;
+pub const NL80211_ATTR_REG_TYPE:u16 = 49;
 pub const NL80211_ATTR_SUPPORTED_COMMANDS: u16 = 50;
 // pub const NL80211_ATTR_FRAME:u16 = 51;
 pub const NL80211_ATTR_SSID: u16 = 52;
@@ -186,13 +177,13 @@ pub const NL80211_ATTR_WIPHY_RTS_THRESHOLD: u16 = 64;
 // pub const NL80211_ATTR_STA_FLAGS2:u16 = 67;
 // pub const NL80211_ATTR_CONTROL_PORT:u16 = 68;
 // pub const NL80211_ATTR_TESTDATA:u16 = 69;
-// pub const NL80211_ATTR_PRIVACY:u16 = 70;
+pub const NL80211_ATTR_PRIVACY:u16 = 70;
 // pub const NL80211_ATTR_DISCONNECTED_BY_AP:u16 = 71;
 // pub const NL80211_ATTR_STATUS_CODE:u16 = 72;
-// pub const NL80211_ATTR_CIPHER_SUITES_PAIRWISE:u16 = 73;
-// pub const NL80211_ATTR_CIPHER_SUITE_GROUP:u16 = 74;
-// pub const NL80211_ATTR_WPA_VERSIONS:u16 = 75;
-// pub const NL80211_ATTR_AKM_SUITES:u16 = 76;
+pub const NL80211_ATTR_CIPHER_SUITES_PAIRWISE:u16 = 73;
+pub const NL80211_ATTR_CIPHER_SUITE_GROUP:u16 = 74;
+pub const NL80211_ATTR_WPA_VERSIONS:u16 = 75;
+pub const NL80211_ATTR_AKM_SUITES:u16 = 76;
 // pub const NL80211_ATTR_REQ_IE:u16 = 77;
 // pub const NL80211_ATTR_RESP_IE:u16 = 78;
 // pub const NL80211_ATTR_PREV_BSSID:u16 = 79;
@@ -207,7 +198,7 @@ pub const NL80211_ATTR_MAX_NUM_PMKIDS: u16 = 86;
 // pub const NL80211_ATTR_COOKIE:u16 = 88;
 pub const NL80211_ATTR_WIPHY_COVERAGE_CLASS: u16 = 89;
 // pub const NL80211_ATTR_TX_RATES:u16 = 90;
-// pub const NL80211_ATTR_FRAME_MATCH:u16 = 91;
+pub const NL80211_ATTR_FRAME_MATCH:u16 = 91;
 // pub const NL80211_ATTR_ACK:u16 = 92;
 pub const NL80211_ATTR_PS_STATE:u16 = 93;
 // pub const NL80211_ATTR_CQM:u16 = 94;
@@ -218,7 +209,7 @@ pub const NL80211_ATTR_WIPHY_TX_POWER_LEVEL: u16 = 98;
 pub const NL80211_ATTR_TX_FRAME_TYPES: u16 = 99;
 pub const NL80211_ATTR_RX_FRAME_TYPES: u16 = 100;
 // Covered by frame_type.rs
-// pub const NL80211_ATTR_FRAME_TYPE:u16 = 101;
+pub const NL80211_ATTR_FRAME_TYPE:u16 = 101;
 pub const NL80211_ATTR_CONTROL_PORT_ETHERTYPE: u16 = 102;
 // pub const NL80211_ATTR_CONTROL_PORT_NO_ENCRYPT:u16 = 103;
 pub const NL80211_ATTR_SUPPORT_IBSS_RSN: u16 = 104;
@@ -243,9 +234,9 @@ pub const NL80211_ATTR_SOFTWARE_IFTYPES: u16 = 121;
 pub const NL80211_ATTR_MAX_NUM_SCHED_SCAN_SSIDS: u16 = 123;
 pub const NL80211_ATTR_MAX_SCHED_SCAN_IE_LEN: u16 = 124;
 // pub const NL80211_ATTR_SCAN_SUPP_RATES:u16 = 125;
-// pub const NL80211_ATTR_HIDDEN_SSID:u16 = 126;
-// pub const NL80211_ATTR_IE_PROBE_RESP:u16 = 127;
-// pub const NL80211_ATTR_IE_ASSOC_RESP:u16 = 128;
+pub const NL80211_ATTR_HIDDEN_SSID:u16 = 126;
+pub const NL80211_ATTR_IE_PROBE_RESP:u16 = 127;
+pub const NL80211_ATTR_IE_ASSOC_RESP:u16 = 128;
 // pub const NL80211_ATTR_STA_WME:u16 = 129;
 pub const NL80211_ATTR_SUPPORT_AP_UAPSD: u16 = 130;
 pub const NL80211_ATTR_ROAM_SUPPORT: u16 = 131;
@@ -321,7 +312,7 @@ pub const NL80211_ATTR_VHT_CAPABILITY_MASK: u16 = 176;
 // pub const NL80211_ATTR_WIPHY_FREQ_HINT:u16 = 201;
 // pub const NL80211_ATTR_MAX_AP_ASSOC_STA:u16 = 202;
 // pub const NL80211_ATTR_TDLS_PEER_CAPABILITY:u16 = 203;
-// pub const NL80211_ATTR_SOCKET_OWNER:u16 = 204;
+pub const NL80211_ATTR_SOCKET_OWNER:u16 = 204;
 // pub const NL80211_ATTR_CSA_C_OFFSETS_TX:u16 = 205;
 pub const NL80211_ATTR_MAX_CSA_COUNTERS: u16 = 206;
 // pub const NL80211_ATTR_TDLS_INITIATOR:u16 = 207;
@@ -381,7 +372,7 @@ pub const NL80211_ATTR_SCHED_SCAN_MAX_REQS: u16 = 256;
 // pub const NL80211_ATTR_EXTERNAL_AUTH_SUPPORT:u16 = 261;
 // pub const NL80211_ATTR_NSS:u16 = 262;
 // pub const NL80211_ATTR_ACK_SIGNAL:u16 = 263;
-// pub const NL80211_ATTR_CONTROL_PORT_OVER_NL80211:u16 = 264;
+pub const NL80211_ATTR_CONTROL_PORT_OVER_NL80211:u16 = 264;
 pub const NL80211_ATTR_TXQ_STATS: u16 = 265;
 pub const NL80211_ATTR_TXQ_LIMIT: u16 = 266;
 pub const NL80211_ATTR_TXQ_MEMORY_LIMIT: u16 = 267;
@@ -403,7 +394,7 @@ pub const NL80211_ATTR_TXQ_QUANTUM: u16 = 268;
 // pub const NL80211_ATTR_HE_BSS_COLOR:u16 = 283;
 // pub const NL80211_ATTR_IFTYPE_AKM_SUITES:u16 = 284;
 // pub const NL80211_ATTR_TID_CONFIG:u16 = 285;
-// pub const NL80211_ATTR_CONTROL_PORT_NO_PREAUTH:u16 = 286;
+pub const NL80211_ATTR_CONTROL_PORT_NO_PREAUTH:u16 = 286;
 // pub const NL80211_ATTR_PMK_LIFETIME:u16 = 287;
 // pub const NL80211_ATTR_PMK_REAUTH_THRESHOLD:u16 = 288;
 // pub const NL80211_ATTR_RECEIVE_MULTICAST:u16 = 289;
@@ -523,6 +514,8 @@ pub enum Nl80211Attr {
     ExtFeatures(Vec<Nl80211ExtFeature>),
     InterfaceCombination(Vec<Nl80211IfaceComb>),
     HtCapabilityMask(Nl80211HtCapabilityMask),
+    FrameMatch,
+    FrameType(Nl80211FrameType),
     TxFrameTypes(Vec<Nl80211IfaceFrameType>),
     RxFrameTypes(Vec<Nl80211IfaceFrameType>),
     MaxNumSchedScanPlans(u32),
@@ -547,6 +540,24 @@ pub enum Nl80211Attr {
     MaxHwTimestampPeers(u16),
     /// Basic Service Set (BSS)
     Bss(Vec<Nl80211BssInfo>),
+    RegType(Nl80211RegDomType),
+    RegAlpha2(String),
+    RegInitiator(Nl80211RegdomInitiator),
+    HiddenSsid(u8),                 // NL80211_ATTR_HIDDEN_SSID
+    BeaconInterval(u16),            // NL80211_ATTR_BEACON_INTERVAL
+    DtimPeriod(u8),                 // NL80211_ATTR_DTIM_PERIOD
+    BeaconHead(Vec<u8>),            // NL80211_ATTR_BEACON_HEAD
+    BeaconTail(Vec<u8>),            // NL80211_ATTR_BEACON_TAIL
+    Privacy(bool),                  // NL80211_ATTR_PRIVACY
+    WpaVersions(u32),               // NL80211_ATTR_WPA_VERSIONS
+    CipherSuitesPairwise(Vec<u32>), // NL80211_ATTR_CIPHER_SUITES_PAIRWISE
+    CipherSuiteGroup(u32),          // NL80211_ATTR_CIPHER_SUITE_GROUP
+    Ie(Vec<u8>),                    // NL80211_ATTR_IE
+    IeProbeResp(Vec<u8>),           // NL80211_ATTR_IE_PROBE_RESP
+    IeAssocResp(Vec<u8>),           // NL80211_ATTR_IE_ASSOC_RESP
+    ControlPortOverNl80211(bool),   // NL80211_ATTR_CONTROL_PORT_OVER_NL80211
+    SocketOwner(bool),              // NL80211_ATTR_SOCKET_OWNER
+    ControlPortNoPreauth(bool),     // NL80211_ATTR_CONTROL_PORT_NO_PREAUTH
     Other(DefaultNla),
 }
 
@@ -580,7 +591,7 @@ impl Nla for Nl80211Attr {
             | Self::TransmitQueueMemoryLimit(_)
             | Self::TransmitQueueQuantum(_) => 4,
             Self::Wdev(_) => 8,
-            Self::IfName(s) | Self::Ssid(s) | Self::WiphyName(s) => s.len() + 1,
+            Self::IfName(s) | Self::Ssid(s) | Self::WiphyName(s) | Self::RegAlpha2(s) => s.len() + 1,
             Self::Mac(_) => ETH_ALEN,
             Self::MacAddrs(s) => {
                 MacAddressNlas::from(s).as_slice().buffer_len()
@@ -592,6 +603,8 @@ impl Nla for Nl80211Attr {
             | Self::MaxNumScanSsids(_)
             | Self::MaxNumSchedScanSsids(_)
             | Self::MaxMatchSets(_)
+            | Self::RegType(_)
+            | Self::RegInitiator(_)
             | Self::MaxNumPmkids(_) => 1,
             Self::TransmitQueueStats(nlas) => nlas.as_slice().buffer_len(),
             Self::StationInfo(nlas) => nlas.as_slice().buffer_len(),
@@ -599,6 +612,7 @@ impl Nla for Nl80211Attr {
             Self::MaxScanIeLen(_) | Self::MaxSchedScanIeLen(_) => 2,
             Self::SupportIbssRsn
             | Self::SupportMeshAuth
+            | Self::FrameMatch
             | Self::SupportApUapsd
             | Self::RoamSupport
             | Self::TdlsSupport
@@ -633,12 +647,29 @@ impl Nla for Nl80211Attr {
                 Nl80211IfTypeExtCapas::from(s).as_slice().buffer_len()
             }
             Self::EmlCapability(_)
+            | Self::FrameType(_)
             | Self::MldCapaAndOps(_)
             | Self::MaxNumAkmSuites(_)
             | Self::MaxHwTimestampPeers(_) => 2,
             Self::Bands(_) => Nl80211BandTypes::LENGTH,
             Self::Bss(v) => v.as_slice().buffer_len(),
+            Self::HiddenSsid(_) => 1,
+            Self::BeaconInterval(_) => 2,
+            Self::DtimPeriod(_) => 1,
+            Self::BeaconHead(ref data) => data.len(),
+            Self::BeaconTail(ref data) => data.len(),
+            Self::Privacy(_) => 0, // It's a flag attribute
+            Self::WpaVersions(_) => 4,
+            Self::CipherSuitesPairwise(ref data) => data.len() * 4,
+            Self::CipherSuiteGroup(_) => 4,
+            Self::Ie(ref data) => data.len(),
+            Self::IeProbeResp(ref data) => data.len(),
+            Self::IeAssocResp(ref data) => data.len(),
+            Self::ControlPortOverNl80211(_) => 0, // Flag attribute
+            Self::SocketOwner(_) => 0,            // Flag attribute
+            Self::ControlPortNoPreauth(_) => 0,   // Flag attribute
             Self::Other(attr) => attr.value_len(),
+            
         }
     }
 
@@ -663,6 +694,11 @@ impl Nla for Nl80211Attr {
             Self::CenterFreq2(_) => NL80211_ATTR_CENTER_FREQ2,
             Self::WiphyTxPowerLevel(_) => NL80211_ATTR_WIPHY_TX_POWER_LEVEL,
             Self::Ssid(_) => NL80211_ATTR_SSID,
+            Self::RegAlpha2(_) => NL80211_ATTR_REG_ALPHA2,
+            Self::RegType(_) => NL80211_ATTR_REG_TYPE,
+            Self::RegInitiator(_) => NL80211_ATTR_REG_INITIATOR,
+            Self::FrameType(_) => NL80211_ATTR_FRAME_TYPE,
+            Self::FrameMatch => NL80211_ATTR_FRAME_MATCH,
             Self::StationInfo(_) => NL80211_ATTR_STA_INFO,
             Self::TransmitQueueStats(_) => NL80211_ATTR_TXQ_STATS,
             Self::TransmitQueueLimit(_) => NL80211_ATTR_TXQ_LIMIT,
@@ -736,6 +772,22 @@ impl Nla for Nl80211Attr {
             Self::MaxNumAkmSuites(_) => NL80211_ATTR_MAX_NUM_AKM_SUITES,
             Self::MaxHwTimestampPeers(_) => NL80211_ATTR_MAX_HW_TIMESTAMP_PEERS,
             Self::Bss(_) => NL80211_ATTR_BSS,
+            Self::HiddenSsid(_) => NL80211_ATTR_HIDDEN_SSID,
+            Self::BeaconInterval(_) => NL80211_ATTR_BEACON_INTERVAL,
+            Self::DtimPeriod(_) => NL80211_ATTR_DTIM_PERIOD,
+            Self::BeaconHead(_) => NL80211_ATTR_BEACON_HEAD,
+            Self::BeaconTail(_) => NL80211_ATTR_BEACON_TAIL,
+            Self::Privacy(_) => NL80211_ATTR_PRIVACY,
+            Self::WpaVersions(_) => NL80211_ATTR_WPA_VERSIONS,
+            Self::CipherSuitesPairwise(_) => NL80211_ATTR_CIPHER_SUITES_PAIRWISE,
+            Self::CipherSuiteGroup(_) => NL80211_ATTR_CIPHER_SUITE_GROUP,
+            Self::Ie(_) => NL80211_ATTR_IE,
+            Self::IeProbeResp(_) => NL80211_ATTR_IE_PROBE_RESP,
+            Self::IeAssocResp(_) => NL80211_ATTR_IE_ASSOC_RESP,
+            Self::ControlPortOverNl80211(_) => NL80211_ATTR_CONTROL_PORT_OVER_NL80211,
+            Self::SocketOwner(_) => NL80211_ATTR_SOCKET_OWNER,
+            Self::ControlPortNoPreauth(_) => NL80211_ATTR_CONTROL_PORT_NO_PREAUTH,
+
             Self::Other(attr) => attr.kind(),
         }
     }
@@ -774,7 +826,7 @@ impl Nla for Nl80211Attr {
             Self::MacAddrs(s) => {
                 MacAddressNlas::from(s).as_slice().emit(buffer)
             }
-            Self::IfName(s) | Self::Ssid(s) | Self::WiphyName(s) => {
+            Self::IfName(s) | Self::Ssid(s) | Self::WiphyName(s) | Self::RegAlpha2(s) => {
                 buffer[..s.len()].copy_from_slice(s.as_bytes());
                 buffer[s.len()] = 0;
             }
@@ -800,6 +852,8 @@ impl Nla for Nl80211Attr {
             | Self::MaxNumSchedScanSsids(d)
             | Self::MaxMatchSets(d)
             | Self::MaxNumPmkids(d) => buffer[0] = *d,
+            Self::RegType(domtype) => domtype.emit(buffer),
+            Self::RegInitiator(initiator) => initiator.emit(buffer),
             Self::CipherSuites(suits) => {
                 let nums: Vec<u32> =
                     suits.as_slice().iter().map(|s| u32::from(*s)).collect();
@@ -811,6 +865,7 @@ impl Nla for Nl80211Attr {
             Self::SupportedIftypes(s) => s.as_slice().emit(buffer),
             Self::WiphyBands(s) => s.as_slice().emit(buffer),
             Self::SplitWiphyDump => (),
+            Self::FrameMatch => (),
             Self::SupportedCommand(s) => {
                 Nl80211Commands::from(s).as_slice().emit(buffer)
             }
@@ -825,6 +880,7 @@ impl Nla for Nl80211Attr {
             Self::ExtFeatures(s) => Nl80211ExtFeatures::from(s).emit(buffer),
             Self::InterfaceCombination(s) => s.as_slice().emit(buffer),
             Self::HtCapabilityMask(s) => s.emit(buffer),
+            Self::FrameType(s) => s.emit(buffer),
             Self::TxFrameTypes(s) => s.as_slice().emit(buffer),
             Self::RxFrameTypes(s) => s.as_slice().emit(buffer),
             Self::ExtCap(v) => v.emit(buffer),
@@ -841,6 +897,28 @@ impl Nla for Nl80211Attr {
             | Self::MaxHwTimestampPeers(d) => write_u16(buffer, *d),
             Self::Bands(v) => v.emit(buffer),
             Self::Bss(v) => v.as_slice().emit(buffer),
+            Self::HiddenSsid(value) | Self::DtimPeriod(value) => {
+                buffer[0] = *value;
+            }
+            Self::BeaconInterval(value) => {
+                write_u16(buffer, *value);
+            }
+            Self::BeaconHead(data) | Self::BeaconTail(data) | Self::Ie(data)
+            | Self::IeProbeResp(data) | Self::IeAssocResp(data) => {
+                buffer.copy_from_slice(data);
+            }
+            Self::Privacy(_) | Self::ControlPortOverNl80211(_)
+            | Self::SocketOwner(_) | Self::ControlPortNoPreauth(_) => {
+                // Flag attributes have no value to emit
+            }
+            Self::WpaVersions(value) | Self::CipherSuiteGroup(value) => {
+                write_u32(buffer, *value);
+            }
+            Self::CipherSuitesPairwise(values) => {
+                for (i, v) in values.iter().enumerate() {
+                    write_u32(&mut buffer[i * 4..(i + 1) * 4], *v);
+                }
+            }
             Self::Other(attr) => attr.emit(buffer),
         }
     }
@@ -976,6 +1054,11 @@ impl<'a, T: AsRef<[u8]> + ?Sized> Parseable<NlaBuffer<&'a T>> for Nl80211Attr {
                 let err_msg =
                     format!("Invalid NL80211_ATTR_SSID value {:?}", payload);
                 Self::Ssid(parse_string(payload).context(err_msg)?)
+            }
+            NL80211_ATTR_REG_ALPHA2 => {
+                let err_msg =
+                    format!("Invalid NL80211_ATTR_REG_ALPHA2 value {:?}", payload);
+                Self::RegAlpha2(parse_string(payload).context(err_msg)?)
             }
             NL80211_ATTR_STA_INFO => {
                 let err_msg = format!(
@@ -1197,6 +1280,7 @@ impl<'a, T: AsRef<[u8]> + ?Sized> Parseable<NlaBuffer<&'a T>> for Nl80211Attr {
                 Self::WiphyBands(nlas)
             }
             NL80211_ATTR_SPLIT_WIPHY_DUMP => Self::SplitWiphyDump,
+            NL80211_ATTR_FRAME_MATCH => Self::FrameMatch,
             NL80211_ATTR_SUPPORTED_COMMANDS => {
                 Self::SupportedCommand(Nl80211Commands::parse(payload)?.into())
             }
@@ -1256,6 +1340,11 @@ impl<'a, T: AsRef<[u8]> + ?Sized> Parseable<NlaBuffer<&'a T>> for Nl80211Attr {
             }
             NL80211_ATTR_HT_CAPABILITY_MASK => {
                 Self::HtCapabilityMask(Nl80211HtCapabilityMask::new(payload))
+            }
+            NL80211_ATTR_FRAME_TYPE => {
+                let err_msg =
+                    format!("Invalid NL80211_ATTR_FRAME_TYPE value {:?}", payload);
+                Self::FrameType(Nl80211FrameType::from(parse_u16(payload).context(err_msg)?))
             }
             NL80211_ATTR_RX_FRAME_TYPES => {
                 let mut nlas = Vec::new();
@@ -1344,6 +1433,12 @@ impl<'a, T: AsRef<[u8]> + ?Sized> Parseable<NlaBuffer<&'a T>> for Nl80211Attr {
             NL80211_ATTR_BANDS => {
                 Self::Bands(Nl80211BandTypes::parse(payload)?)
             }
+            NL80211_ATTR_REG_TYPE => {
+                Self::RegType(Nl80211RegDomType::parse(payload)?)
+            }
+            NL80211_ATTR_REG_INITIATOR => {
+                Self::RegInitiator(Nl80211RegdomInitiator::parse(payload)?)
+            }
             NL80211_ATTR_MAX_NUM_AKM_SUITES => {
                 Self::MaxNumAkmSuites(parse_u16(payload).context(format!(
                     "Invalid NL80211_ATTR_MAX_NUM_AKM_SUITES {:?}",
@@ -1356,6 +1451,61 @@ impl<'a, T: AsRef<[u8]> + ?Sized> Parseable<NlaBuffer<&'a T>> for Nl80211Attr {
                     payload
                 ))?,
             ),
+            NL80211_ATTR_HIDDEN_SSID => {
+                let value = parse_u8(payload).context("Invalid NL80211_ATTR_HIDDEN_SSID")?;
+                Self::HiddenSsid(value)
+            }
+            NL80211_ATTR_BEACON_INTERVAL => {
+                let value = parse_u16(payload).context("Invalid NL80211_ATTR_BEACON_INTERVAL")?;
+                Self::BeaconInterval(value)
+            }
+            NL80211_ATTR_DTIM_PERIOD => {
+                let value = parse_u8(payload).context("Invalid NL80211_ATTR_DTIM_PERIOD")?;
+                Self::DtimPeriod(value)
+            }
+            NL80211_ATTR_BEACON_HEAD => {
+                Self::BeaconHead(payload.to_vec())
+            }
+            NL80211_ATTR_BEACON_TAIL => {
+                Self::BeaconTail(payload.to_vec())
+            }
+            NL80211_ATTR_PRIVACY => {
+                Self::Privacy(true)
+            }
+            NL80211_ATTR_WPA_VERSIONS => {
+                let value = parse_u32(payload).context("Invalid NL80211_ATTR_WPA_VERSIONS")?;
+                Self::WpaVersions(value)
+            }
+            NL80211_ATTR_CIPHER_SUITES_PAIRWISE => {
+                let mut suits = Vec::new();
+                for chunk in payload.chunks_exact(4) {
+                    suits.push(parse_u32(chunk).context("Invalid NL80211_ATTR_CIPHER_SUITES_PAIRWISE")?);
+                }
+                Self::CipherSuitesPairwise(suits)
+            }
+            NL80211_ATTR_CIPHER_SUITE_GROUP => {
+                let value = parse_u32(payload).context("Invalid NL80211_ATTR_CIPHER_SUITE_GROUP")?;
+                Self::CipherSuiteGroup(value)
+            }
+            NL80211_ATTR_IE => {
+                Self::Ie(payload.to_vec())
+            }
+            NL80211_ATTR_IE_PROBE_RESP => {
+                Self::IeProbeResp(payload.to_vec())
+            }
+            NL80211_ATTR_IE_ASSOC_RESP => {
+                Self::IeAssocResp(payload.to_vec())
+            }
+            NL80211_ATTR_CONTROL_PORT_OVER_NL80211 => {
+                Self::ControlPortOverNl80211(true)
+            }
+            NL80211_ATTR_SOCKET_OWNER => {
+                Self::SocketOwner(true)
+            }
+            NL80211_ATTR_CONTROL_PORT_NO_PREAUTH => {
+                Self::ControlPortNoPreauth(true)
+            }
+
             _ => Self::Other(
                 DefaultNla::parse(buf).context("invalid NLA (unknown kind)")?,
             ),

@@ -17,6 +17,7 @@ mod mlo;
 mod scan;
 mod station;
 mod stats;
+mod reg;
 mod wifi4;
 mod wifi5;
 mod wifi6;
