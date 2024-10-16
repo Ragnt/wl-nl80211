@@ -31,7 +31,7 @@ futures = "0.3.17"
 log = "0.4.14"
 thiserror = "1.0.29"
 tokio = { version = "1.0.1", features = ["rt"], optional = true}
-genetlink = { default-features = false, version = "0.2.5", path="../genetlink" }
+genetlink = { default-features = false, version = "0.2.5", git="https://github.com/Ragnt/genetlink.git" }
 netlink-packet-core = { version = "0.7.0" }
 netlink-packet-generic = { version = "0.3.3" }
 netlink-packet-utils = { version = "0.5.2" }

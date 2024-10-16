@@ -79,7 +79,7 @@ impl Nl80211RegisterFrame {
             handle,
             message: Nl80211Message {
                 cmd: Nl80211Command::RegisterFrame,
-                attributes: vec![Nl80211Attr::IfIndex(index), Nl80211Attr::FrameType(frame_type), ],
+                attributes: vec![Nl80211Attr::IfIndex(index), Nl80211Attr::FrameType(frame_type), Nl80211Attr::FrameMatch],
             },
             dump: false,
         }

@@ -646,8 +646,8 @@ impl Nla for Nl80211Attr {
             Self::IfTypeExtCap(s) => {
                 Nl80211IfTypeExtCapas::from(s).as_slice().buffer_len()
             }
+            Self::FrameType(v) => v.value_len(),
             Self::EmlCapability(_)
-            | Self::FrameType(_)
             | Self::MldCapaAndOps(_)
             | Self::MaxNumAkmSuites(_)
             | Self::MaxHwTimestampPeers(_) => 2,
@@ -880,7 +880,7 @@ impl Nla for Nl80211Attr {
             Self::ExtFeatures(s) => Nl80211ExtFeatures::from(s).emit(buffer),
             Self::InterfaceCombination(s) => s.as_slice().emit(buffer),
             Self::HtCapabilityMask(s) => s.emit(buffer),
-            Self::FrameType(s) => s.emit(buffer),
+            Self::FrameType(s) => s.emit_value(buffer),
             Self::TxFrameTypes(s) => s.as_slice().emit(buffer),
             Self::RxFrameTypes(s) => s.as_slice().emit(buffer),
             Self::ExtCap(v) => v.emit(buffer),

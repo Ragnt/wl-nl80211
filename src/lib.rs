@@ -114,7 +114,7 @@ pub use self::ext_cap::{
     Nl80211ExtendedCapability, Nl80211IfTypeExtCapa, Nl80211IfTypeExtCapas,
 };
 pub use self::feature::{Nl80211ExtFeature, Nl80211Features};
-pub use self::frame_type::{Nl80211FrameType, Nl80211IfaceFrameType};
+pub use self::frame_type::{Nl80211FrameType, Nl80211IfaceFrameType, Nl80211FrameTypeCtl, Nl80211FrameTypeData, Nl80211FrameTypeExt, Nl80211FrameTypeMgmt};
 pub use self::handle::Nl80211Handle;
 pub use self::iface::{
     Nl80211IfaceComb, Nl80211IfaceCombAttribute, Nl80211IfaceCombLimit,

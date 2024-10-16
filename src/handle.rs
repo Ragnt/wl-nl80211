@@ -26,6 +26,11 @@ impl Nl80211Handle {
         Nl80211InterfaceHandle::new(self.clone())
     }
 
+    // equivalent to `iw dev` command
+    pub fn ap(&self) -> Nl80211InterfaceHandle {
+        Nl80211InterfaceHandle::new(self.clone())
+    }
+
     // equivalent to `iw dev DEVICE station` command
     pub fn station(&self) -> Nl80211StationHandle {
         Nl80211StationHandle::new(self.clone())
