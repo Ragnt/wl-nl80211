@@ -32,12 +32,13 @@ impl Nl80211InterfaceGetRequest {
     {
         let Nl80211InterfaceGetRequest { mut handle, message, dump } = self;
 
-        let mut flags = NLM_F_REQUEST;
-        if dump {
-            flags = flags | NLM_F_DUMP;
-        }
+        let nl80211_msg = Nl80211Message {
+            cmd: Nl80211Command::GetInterface,
+            attributes: vec![],
+        };
+        let flags = NLM_F_REQUEST | NLM_F_DUMP;
 
-        nl80211_execute(&mut handle, message, flags).await
+        nl80211_execute(&mut handle, nl80211_msg, flags).await
     }
 
     /// Lookup a interface by index

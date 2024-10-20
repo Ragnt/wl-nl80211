@@ -569,6 +569,7 @@ pub enum Nl80211Attr {
     /// iterations, only the interval between scans. The scan plans are
     /// executed sequentially.
     SchedScanPlans(Vec<Nl80211SchedScanPlan>),
+<<<<<<< HEAD
     RegType(Nl80211RegDomType),
     RegAlpha2(String),
     RegInitiator(Nl80211RegdomInitiator),
@@ -591,6 +592,8 @@ pub enum Nl80211Attr {
     ApSettingsFlags(u32),           // NL80211_ATTR_AP_SETTINGS_FLAGS
     Pmk(Vec<u8>),                       // NL80211_ATTR_PMK
     Frame(Vec<u8>),
+=======
+>>>>>>> c0dcf88 (scan: Add scan trigger and schedule support)
     Other(DefaultNla),
 }
 
@@ -625,11 +628,17 @@ impl Nla for Nl80211Attr {
             | Self::TransmitQueueMemoryLimit(_)
             | Self::TransmitQueueQuantum(_)
             | Self::SchedScanInterval(_)
+<<<<<<< HEAD
             | Self::ApSettingsFlags(_)
             | Self::SchedScanDelay(_) => 4,
             Self::Wdev(_) => 8,
             Self::Ssid(s) => s.len(),
             Self::IfName(s) | Self::WiphyName(s) | Self::RegAlpha2(s) => s.len() + 1,
+=======
+            | Self::SchedScanDelay(_) => 4,
+            Self::Wdev(_) => 8,
+            Self::IfName(s) | Self::Ssid(s) | Self::WiphyName(s) => s.len() + 1,
+>>>>>>> c0dcf88 (scan: Add scan trigger and schedule support)
             Self::Mac(_) | Self::MacMask(_) => ETH_ALEN,
             Self::MacAddrs(s) => {
                 MacAddressNlas::from(s).as_slice().buffer_len()
@@ -703,6 +712,7 @@ impl Nla for Nl80211Attr {
             }
             Self::SchedScanMatch(v) => v.as_slice().buffer_len(),
             Self::SchedScanPlans(v) => v.as_slice().buffer_len(),
+<<<<<<< HEAD
             Self::HiddenSsid(_) => 4,
             Self::BeaconInterval(_) | Self::DtimPeriod(_) => 4,
             Self::FrameMatch(ref data) => data.len(),
@@ -717,6 +727,8 @@ impl Nla for Nl80211Attr {
             Self::Ie(data) => data.buffer_len(),
             Self::IeProbeResp(data) => data.buffer_len(),
             Self::IeAssocResp(data) => data.buffer_len(),
+=======
+>>>>>>> c0dcf88 (scan: Add scan trigger and schedule support)
             Self::Other(attr) => attr.value_len(),
             
         }
@@ -834,6 +846,7 @@ impl Nla for Nl80211Attr {
             Self::ScanFrequencies(_) => NL80211_ATTR_SCAN_FREQUENCIES,
             Self::SchedScanMatch(_) => NL80211_ATTR_SCHED_SCAN_MATCH,
             Self::SchedScanPlans(_) => NL80211_ATTR_SCHED_SCAN_PLANS,
+<<<<<<< HEAD
             Self::HiddenSsid(_) => NL80211_ATTR_HIDDEN_SSID,
             Self::BeaconInterval(_) => NL80211_ATTR_BEACON_INTERVAL,
             Self::DtimPeriod(_) => NL80211_ATTR_DTIM_PERIOD,
@@ -851,6 +864,8 @@ impl Nla for Nl80211Attr {
             Self::SocketOwner => NL80211_ATTR_SOCKET_OWNER,
             Self::ControlPortNoPreauth => NL80211_ATTR_CONTROL_PORT_NO_PREAUTH,
 
+=======
+>>>>>>> c0dcf88 (scan: Add scan trigger and schedule support)
             Self::Other(attr) => attr.kind(),
         }
     }
@@ -881,11 +896,16 @@ impl Nla for Nl80211Attr {
             | Self::TransmitQueueMemoryLimit(d)
             | Self::TransmitQueueQuantum(d)
             | Self::SchedScanInterval(d)
+<<<<<<< HEAD
             | Self::ApSettingsFlags(d)
             | Self::SchedScanDelay(d) => write_u32(buffer, *d),
             Self::MaxScanIeLen(d) 
             | Self::MaxSchedScanIeLen(d) 
             | Self::ControlPortEthertype(d) => {
+=======
+            | Self::SchedScanDelay(d) => write_u32(buffer, *d),
+            Self::MaxScanIeLen(d) | Self::MaxSchedScanIeLen(d) => {
+>>>>>>> c0dcf88 (scan: Add scan trigger and schedule support)
                 write_u16(buffer, *d)
             }
             Self::Wdev(d) => write_u64(buffer, *d),
@@ -981,6 +1001,7 @@ impl Nla for Nl80211Attr {
             }
             Self::SchedScanMatch(v) => v.as_slice().emit(buffer),
             Self::SchedScanPlans(v) => v.as_slice().emit(buffer),
+<<<<<<< HEAD
             Self::HiddenSsid(value) => {
                 write_u32(buffer, *value);
             }
@@ -1019,6 +1040,8 @@ impl Nla for Nl80211Attr {
                     write_u32(&mut buffer[i * 4..(i + 1) * 4], u32::from(*v).to_be());
                 }
             }
+=======
+>>>>>>> c0dcf88 (scan: Add scan trigger and schedule support)
             Self::Other(attr) => attr.emit(buffer),
         }
     }
@@ -1635,6 +1658,7 @@ impl<'a, T: AsRef<[u8]> + ?Sized> Parseable<NlaBuffer<&'a T>> for Nl80211Attr {
                 }
                 Self::SchedScanPlans(nlas)
             }
+<<<<<<< HEAD
             NL80211_ATTR_HIDDEN_SSID => {
                 let value = parse_u32(payload).context("Invalid NL80211_ATTR_HIDDEN_SSID")?;
                 Self::HiddenSsid(value)
@@ -1696,6 +1720,8 @@ impl<'a, T: AsRef<[u8]> + ?Sized> Parseable<NlaBuffer<&'a T>> for Nl80211Attr {
                 Self::ControlPortNoPreauth
             }
 
+=======
+>>>>>>> c0dcf88 (scan: Add scan trigger and schedule support)
             _ => Self::Other(
                 DefaultNla::parse(buf).context("invalid NLA (unknown kind)")?,
             ),
