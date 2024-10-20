@@ -2,6 +2,7 @@
 
 use futures::TryStream;
 use netlink_packet_core::{NLM_F_DUMP, NLM_F_REQUEST};
+use netlink_packet_core::{NLM_F_DUMP, NLM_F_REQUEST};
 use netlink_packet_generic::GenlMessage;
 
 use crate::{
@@ -30,8 +31,7 @@ impl Nl80211WiphyGetRequest {
     ) -> impl TryStream<Ok = GenlMessage<Nl80211Message>, Error = Nl80211Error>
     {
         let Nl80211WiphyGetRequest { mut handle, message } = self;
-        let flags = NLM_F_REQUEST;
-        flags = NLM_F_DUMP | NLM_F_REQUEST;
+        let flags = NLM_F_DUMP | NLM_F_REQUEST;
         nl80211_execute(&mut handle, message, flags).await
     }
 
