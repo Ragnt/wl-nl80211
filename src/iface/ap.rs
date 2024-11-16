@@ -12,7 +12,6 @@ use crate::{nl80211_execute, reg::{Nl80211RegDomType, Nl80211RegdomInitiator}, N
 pub struct Nl80211RegisterFrame {
     handle: Nl80211Handle,
     message: Nl80211Message,
-    dump: bool,
 }
 
 /*
@@ -82,7 +81,6 @@ impl Nl80211RegisterFrame {
                 cmd: Nl80211Command::RegisterFrame,
                 attributes: vec![Nl80211Attr::IfIndex(index), Nl80211Attr::FrameType(frame_type), Nl80211Attr::FrameMatch],
             },
-            dump: false,
         }
     }
 
@@ -90,12 +88,9 @@ impl Nl80211RegisterFrame {
         self,
     ) -> impl TryStream<Ok = GenlMessage<Nl80211Message>, Error = Nl80211Error>
     {
-        let Nl80211RegisterFrame { mut handle, message, dump } = self;
+        let Nl80211RegisterFrame { mut handle, message } = self;
 
         let mut flags = NLM_F_REQUEST;
-        if dump {
-            flags = flags | NLM_F_DUMP;
-        }
 
         nl80211_execute(&mut handle, message, flags).await
     }
