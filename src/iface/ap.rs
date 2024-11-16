@@ -3,8 +3,7 @@
 use std::any::Any;
 
 use futures::TryStream;
-use log::debug;
-use netlink_packet_core::{NLM_F_ACK, NLM_F_DUMP, NLM_F_REQUEST};
+use netlink_packet_core::{NLM_F_DUMP, NLM_F_REQUEST};
 use netlink_packet_generic::GenlMessage;
 use netlink_packet_utils::Emitable;
 
@@ -130,6 +129,9 @@ impl Nl80211GetRegulatory {
         self,
     ) -> impl TryStream<Ok = GenlMessage<Nl80211Message>, Error = Nl80211Error>
     {
+        let Nl80211GetRegulatory { mut handle, message } = self;
+
+        let flags = NLM_F_REQUEST;
         let Nl80211GetRegulatory { mut handle, message } = self;
 
         nl80211_execute(&mut handle, message, NLM_F_REQUEST).await
