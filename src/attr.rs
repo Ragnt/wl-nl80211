@@ -37,7 +37,7 @@ use netlink_packet_utils::{
 };
 
 use crate::{
-    bytes::{write_u16, write_u32, write_u64}, reg::{Nl80211RegDomType, Nl80211RegdomInitiator}, wiphy::Nl80211Commands, Nl80211Band, Nl80211BandTypes, Nl80211BssInfo, Nl80211ChannelWidth, Nl80211CipherSuite, Nl80211Command, Nl80211ExtFeature, Nl80211ExtFeatures, Nl80211ExtendedCapability, Nl80211Features, Nl80211FrameType, Nl80211HtCapabilityMask, Nl80211HtWiphyChannelType, Nl80211IfMode, Nl80211IfTypeExtCapa, Nl80211IfTypeExtCapas, Nl80211IfaceComb, Nl80211IfaceFrameType, Nl80211InterfaceType, Nl80211InterfaceTypes, Nl80211MloLink, Nl80211StationInfo, Nl80211TransmitQueueStat, Nl80211VhtCapability, Nl80211WowlanTrigersSupport
+    bytes::{write_u16, write_u32, write_u64}, reg::{Nl80211RegDomType, Nl80211RegdomInitiator}, scan::{Nla80211ScanFreqNlas, Nla80211ScanSsidNlas}, wiphy::Nl80211Commands, Nl80211Band, Nl80211BandTypes, Nl80211BssInfo, Nl80211ChannelWidth, Nl80211CipherSuite, Nl80211Command, Nl80211ExtFeature, Nl80211ExtFeatures, Nl80211ExtendedCapability, Nl80211Features, Nl80211FrameType, Nl80211HtCapabilityMask, Nl80211HtWiphyChannelType, Nl80211IfMode, Nl80211IfTypeExtCapa, Nl80211IfTypeExtCapas, Nl80211IfaceComb, Nl80211IfaceFrameType, Nl80211InterfaceType, Nl80211InterfaceTypes, Nl80211MloLink, Nl80211ScanFlags, Nl80211SchedScanMatch, Nl80211SchedScanPlan, Nl80211StationInfo, Nl80211TransmitQueueStat, Nl80211VhtCapability, Nl80211WowlanTrigersSupport
 };
 
 const ETH_ALEN: usize = 6;

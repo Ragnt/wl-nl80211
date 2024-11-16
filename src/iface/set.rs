@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 use futures::TryStream;
+use netlink_packet_core::NLM_F_REQUEST;
 use netlink_packet_generic::GenlMessage;
 
 use crate::{
@@ -58,7 +59,10 @@ impl Nl80211InterfaceSetRequest {
             cmd: Nl80211Command::SetInterface,
             attributes: attrs,
         };
-        nl80211_execute(&mut handle, nl80211_msg, false).await
+        
+        let flags = NLM_F_REQUEST;
+
+        nl80211_execute(&mut handle, nl80211_msg, flags).await
     }
 }
 
@@ -180,7 +184,10 @@ impl Nl80211InterfaceSetChannelRequest {
             cmd: Nl80211Command::SetChannel,
             attributes: attrs,
         };
-        nl80211_execute(&mut handle, nl80211_msg, false).await
+        
+        let flags = NLM_F_REQUEST;
+
+        nl80211_execute(&mut handle, nl80211_msg, flags).await
     }
 }
 

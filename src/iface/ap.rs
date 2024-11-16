@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 use futures::TryStream;
+use netlink_packet_core::{NLM_F_DUMP, NLM_F_REQUEST};
 use netlink_packet_generic::GenlMessage;
 
 use crate::{nl80211_execute, reg::{Nl80211RegDomType, Nl80211RegdomInitiator}, Nl80211Attr, Nl80211Command, Nl80211Error, Nl80211FrameType, Nl80211Handle, Nl80211Message};
@@ -91,7 +92,12 @@ impl Nl80211RegisterFrame {
     {
         let Nl80211RegisterFrame { mut handle, message, dump } = self;
 
-        nl80211_execute(&mut handle, message, dump).await
+        let mut flags = NLM_F_REQUEST;
+        if dump {
+            flags = flags | NLM_F_DUMP;
+        }
+
+        nl80211_execute(&mut handle, message, flags).await
     }
 
 }
@@ -100,7 +106,6 @@ impl Nl80211RegisterFrame {
 pub struct Nl80211GetRegulatory {
     handle: Nl80211Handle,
     message: Nl80211Message,
-    dump: bool,
 }
 
 impl Nl80211GetRegulatory {
@@ -111,7 +116,6 @@ impl Nl80211GetRegulatory {
                 cmd: Nl80211Command::GetReg,
                 attributes: vec![],
             },
-            dump: false,
         }
     }
 
@@ -119,9 +123,11 @@ impl Nl80211GetRegulatory {
         self,
     ) -> impl TryStream<Ok = GenlMessage<Nl80211Message>, Error = Nl80211Error>
     {
-        let Nl80211GetRegulatory { mut handle, message, dump } = self;
+        let Nl80211GetRegulatory { mut handle, message } = self;
 
-        nl80211_execute(&mut handle, message, dump).await
+        let flags = NLM_F_REQUEST;
+
+        nl80211_execute(&mut handle, message, flags).await
     }
 
 }
@@ -130,7 +136,6 @@ impl Nl80211GetRegulatory {
 pub struct Nl80211ReqSetRegulatory {
     handle: Nl80211Handle,
     message: Nl80211Message,
-    dump: bool,
 }
 
 impl Nl80211ReqSetRegulatory {
@@ -141,7 +146,6 @@ impl Nl80211ReqSetRegulatory {
                 cmd: Nl80211Command::ReqSetReg,
                 attributes: vec![Nl80211Attr::RegAlpha2(alpha2)],
             },
-            dump: false,
         }
     }
 
@@ -149,9 +153,11 @@ impl Nl80211ReqSetRegulatory {
         self,
     ) -> impl TryStream<Ok = GenlMessage<Nl80211Message>, Error = Nl80211Error>
     {
-        let Nl80211ReqSetRegulatory { mut handle, message, dump } = self;
+        let Nl80211ReqSetRegulatory { mut handle, message } = self;
 
-        nl80211_execute(&mut handle, message, dump).await
+        let flags = NLM_F_REQUEST;
+
+        nl80211_execute(&mut handle, message, flags).await
     }
 
 }
@@ -160,7 +166,6 @@ impl Nl80211ReqSetRegulatory {
 pub struct Nl80211RegChange {
     handle: Nl80211Handle,
     message: Nl80211Message,
-    dump: bool,
 }
 
 impl Nl80211RegChange {
@@ -171,7 +176,6 @@ impl Nl80211RegChange {
                 cmd: Nl80211Command::RegChange,
                 attributes: vec![Nl80211Attr::RegAlpha2(alpha2), Nl80211Attr::RegType(Nl80211RegDomType::Country), Nl80211Attr::RegInitiator(Nl80211RegdomInitiator::User)],
             },
-            dump: false,
         }
     }
 
@@ -179,9 +183,11 @@ impl Nl80211RegChange {
         self,
     ) -> impl TryStream<Ok = GenlMessage<Nl80211Message>, Error = Nl80211Error>
     {
-        let Nl80211RegChange { mut handle, message, dump } = self;
+        let Nl80211RegChange { mut handle, message } = self;
 
-        nl80211_execute(&mut handle, message, dump).await
+        let flags = NLM_F_REQUEST;
+
+        nl80211_execute(&mut handle, message, flags).await
     }
 
 }
