@@ -30,24 +30,19 @@ impl Nl80211InterfaceGetRequest {
     {
         let Nl80211InterfaceGetRequest { mut handle, message } = self;
 
-        let mut flags = NLM_F_REQUEST;
-        if dump {
-            flags = flags | NLM_F_DUMP;
-        }
+        let flags = NLM_F_REQUEST;
 
         nl80211_execute(&mut handle, message, flags).await
     }
 
     /// Lookup a interface by index
     pub fn match_index(mut self, index: u32) -> Self {
-        self.dump = false;
         self.message.attributes.push(Nl80211Attr::IfIndex(index));
         self
     }
 
     /// Lookup a interface by name
     pub fn match_name(mut self, name: String) -> Self {
-        self.dump = false;
         self.message.attributes.push(Nl80211Attr::IfName(name));
         self
     }

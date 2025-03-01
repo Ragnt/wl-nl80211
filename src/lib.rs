@@ -96,7 +96,7 @@ pub use self::wiphy::{
     Nl80211WowlanTrigerPatternSupport, Nl80211WowlanTrigersSupport,
 };
 
-pub use self::element::{Nl80211Elements, Nl80211RateAndSelector, Nl80211ElementRsn, Nl80211RsnCapbilities, Nl80211CipherSuite, Nl80211ElementCountry, Nl80211ElementCountryEnvironment, Nl80211ElementCountryTriplet, Nl80211ElementSubBand};
+pub use self::element::{Nl80211Elements, Nl80211RateAndSelector, Nl80211ElementRsn, Nl80211RsnCapbilities,  Nl80211ElementCountry, Nl80211ElementCountryEnvironment, Nl80211ElementCountryTriplet, Nl80211ElementSubBand};
 pub(crate) use self::feature::Nl80211ExtFeatures;
 pub(crate) use self::handle::nl80211_execute;
 pub(crate) use self::iface::Nl80211InterfaceTypes;

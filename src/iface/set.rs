@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 
 use futures::TryStream;
-<<<<<<< HEAD
 use netlink_packet_core::{NLM_F_ACK, NLM_F_REQUEST};
 use netlink_packet_generic::GenlMessage;
 
@@ -11,14 +10,6 @@ use crate::{
 
 use super::Nl80211InterfaceType;
 
-=======
-use netlink_packet_generic::GenlMessage;
-
-use crate::{
-    nl80211_execute, Nl80211Attr, Nl80211Command, Nl80211Error, Nl80211Handle, Nl80211Message
-};
-
->>>>>>> 5dcf85d (Add set, update get for index, others)
 pub struct Nl80211InterfaceSetRequest {
     handle: Nl80211Handle,
     attrs: Vec<Nl80211Attr>
