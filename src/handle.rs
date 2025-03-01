@@ -17,7 +17,7 @@ pub struct Nl80211Handle {
 }
 
 impl Nl80211Handle {
-    pub(crate) fn new(handle: GenetlinkHandle) -> Self {
+    pub fn new(handle: GenetlinkHandle) -> Self {
         Nl80211Handle { handle }
     }
 

@@ -34,21 +34,28 @@ pub use self::command::Nl80211Command;
 #[cfg(feature = "tokio_socket")]
 pub use self::connection::new_connection;
 pub use self::connection::new_connection_with_socket;
-pub use self::element::Nl80211Element;
+
+pub use self::element::{Nl80211Element,Nl80211AkmSuite, Nl80211AuthType};
+
 pub use self::error::Nl80211Error;
 pub use self::ext_cap::{
     Nl80211ExtendedCapability, Nl80211IfTypeExtCapa, Nl80211IfTypeExtCapas,
 };
+
 pub use self::feature::{Nl80211ExtFeature, Nl80211Features};
 pub use self::frame_type::{Nl80211FrameType, Nl80211IfaceFrameType, Nl80211FrameTypeCtl, Nl80211FrameTypeData, Nl80211FrameTypeExt, Nl80211FrameTypeMgmt};
 pub use self::handle::Nl80211Handle;
+
 pub use self::iface::{
     Nl80211IfaceComb, Nl80211IfaceCombAttribute, Nl80211IfaceCombLimit,
     Nl80211IfaceCombLimitAttribute, Nl80211InterfaceGetRequest,
-    Nl80211InterfaceHandle, Nl80211InterfaceType,
+    Nl80211InterfaceHandle, Nl80211InterfaceType, Nl80211StartAp, 
+    Nl80211InterfaceSetChannelRequest, Nl80211InterfaceSetRequest
 };
+
 pub use self::message::Nl80211Message;
 pub use self::mlo::Nl80211MloLink;
+
 pub use self::scan::{
     Nl80211BssCapabilities, Nl80211BssInfo, Nl80211BssUseFor, Nl80211Scan,
     Nl80211ScanFlags, Nl80211ScanGetRequest, Nl80211ScanHandle,
@@ -84,12 +91,12 @@ pub use self::wifi7::{
 };
 pub use self::wiphy::{
     Nl80211Band, Nl80211BandInfo, Nl80211BandType, Nl80211BandTypes,
-    Nl80211CipherSuite, Nl80211Frequency, Nl80211FrequencyInfo, Nl80211IfMode,
+    Nl80211Frequency, Nl80211FrequencyInfo, Nl80211IfMode,
     Nl80211WiphyGetRequest, Nl80211WiphyHandle, Nl80211WowlanTcpTrigerSupport,
     Nl80211WowlanTrigerPatternSupport, Nl80211WowlanTrigersSupport,
 };
 
-pub(crate) use self::element::Nl80211Elements;
+pub use self::element::{Nl80211Elements, Nl80211RateAndSelector, Nl80211ElementRsn, Nl80211RsnCapbilities, Nl80211CipherSuite, Nl80211ElementCountry, Nl80211ElementCountryEnvironment, Nl80211ElementCountryTriplet, Nl80211ElementSubBand};
 pub(crate) use self::feature::Nl80211ExtFeatures;
 pub(crate) use self::handle::nl80211_execute;
 pub(crate) use self::iface::Nl80211InterfaceTypes;

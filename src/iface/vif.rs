@@ -16,7 +16,7 @@ pub struct Nl80211InterfaceNewRequest {
 }
 
 impl Nl80211InterfaceNewRequest {
-    // Create a new for a specific interface via index
+    // Create a new VIF for a specific interface via index
     pub fn new(handle: Nl80211Handle, index: u32, name: String, mode: Nl80211InterfaceType) -> Self {
         Nl80211InterfaceNewRequest { handle, attrs: vec![Nl80211Attr::IfIndex(index), Nl80211Attr::IfName(name), Nl80211Attr::IfType(mode)] }
     }
@@ -47,6 +47,34 @@ impl Nl80211InterfaceNewRequest {
 
         let nl80211_msg = Nl80211Message {
             cmd: Nl80211Command::SetInterface,
+            attributes: attrs,
+        };        
+        
+        let flags = NLM_F_REQUEST;
+
+        nl80211_execute(&mut handle, nl80211_msg, flags).await
+    }
+}
+
+pub struct Nl80211InterfaceDelRequest {
+    handle: Nl80211Handle,
+    attrs: Vec<Nl80211Attr>
+}
+
+impl Nl80211InterfaceDelRequest {
+    // Delete a VIF
+    pub fn new(handle: Nl80211Handle, index: u32) -> Self {
+        Nl80211InterfaceDelRequest { handle, attrs: vec![Nl80211Attr::IfIndex(index)] }
+    }
+
+    pub async fn execute(
+        self,
+    ) -> impl TryStream<Ok = GenlMessage<Nl80211Message>, Error = Nl80211Error>
+    {
+        let Nl80211InterfaceDelRequest { mut handle, attrs } = self;
+
+        let nl80211_msg = Nl80211Message {
+            cmd: Nl80211Command::DelInterface,
             attributes: attrs,
         };        
         

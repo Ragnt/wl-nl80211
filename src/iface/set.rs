@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 use futures::TryStream;
-use netlink_packet_core::NLM_F_REQUEST;
+use netlink_packet_core::{NLM_F_ACK, NLM_F_REQUEST};
 use netlink_packet_generic::GenlMessage;
 
 use crate::{
@@ -42,6 +42,13 @@ impl Nl80211InterfaceSetRequest {
         self
     }
 
+    // Set ap mode
+    pub fn with_ap(mut self) -> Self {
+        let attr = Nl80211Attr::IfType(Nl80211InterfaceType::Ap);
+        self.attrs.push(attr);
+        self
+    }
+
     // Set mac address
     pub fn with_mac(mut self, mac: &[u8; 6]) -> Self {
         let attr = Nl80211Attr::Mac(*mac);
@@ -60,9 +67,10 @@ impl Nl80211InterfaceSetRequest {
             attributes: attrs,
         };
         
-        let flags = NLM_F_REQUEST;
+        let flags = NLM_F_REQUEST | NLM_F_ACK;
 
         nl80211_execute(&mut handle, nl80211_msg, flags).await
+        
     }
 }
 
@@ -78,35 +86,35 @@ impl Nl80211InterfaceSetChannelRequest {
     }
 
     /// Set frequency of the interface
-    fn with_frequency(mut self, freq: u32) -> Self {
+    pub fn with_frequency(mut self, freq: u32) -> Self {
         let attr = Nl80211Attr::WiphyFreq(freq);
         self.attrs.push(attr);
         self
     }
 
     /// Set channel width of the interface
-    fn with_channel_width(mut self, width: Nl80211ChannelWidth) -> Self {
+    pub fn with_channel_width(mut self, width: Nl80211ChannelWidth) -> Self {
         let attr = Nl80211Attr::ChannelWidth(width);
         self.attrs.push(attr);
         self
     }
 
     /// Set HT channel type of the interface
-    fn with_channel_type(mut self, chan_type: Nl80211HtWiphyChannelType) -> Self {
+    pub fn with_channel_type(mut self, chan_type: Nl80211HtWiphyChannelType) -> Self {
         let attr = Nl80211Attr::WiphyChannelType(chan_type);
         self.attrs.push(attr);
         self
     }
 
     /// Set freq1 for VHT channel
-    fn with_center_freq1(mut self, freq: u32) -> Self {
+    pub fn with_center_freq1(mut self, freq: u32) -> Self {
         let attr = Nl80211Attr::CenterFreq1(freq);
         self.attrs.push(attr);
         self
     }
 
     /// Set freq2 for VHT channel
-    fn with_center_freq2(mut self, freq: u32) -> Self {
+    pub fn with_center_freq2(mut self, freq: u32) -> Self {
         let attr = Nl80211Attr::CenterFreq2(freq);
         self.attrs.push(attr);
         self
@@ -169,7 +177,7 @@ impl Nl80211InterfaceSetChannelRequest {
     }
 
     /// Clear all attributes except IfIndex
-    fn clear_except_ifindex(mut self) -> Self {
+    pub fn clear_except_ifindex(mut self) -> Self {
         self.attrs.retain(|attr| matches!(attr, Nl80211Attr::IfIndex(_)));
         self
     }
@@ -185,7 +193,7 @@ impl Nl80211InterfaceSetChannelRequest {
             attributes: attrs,
         };
         
-        let flags = NLM_F_REQUEST;
+        let flags = NLM_F_REQUEST | NLM_F_ACK;
 
         nl80211_execute(&mut handle, nl80211_msg, flags).await
     }

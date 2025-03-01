@@ -8,10 +8,11 @@ use netlink_packet_utils::{
 
 use crate::{
     bytes::{parse_u16_le, write_u16_le, write_u32_le},
-    Nl80211ElementHtCap,
+    Nl80211ElementHtCap, Nl80211ExtendedCapability,
 };
 
-pub(crate) struct Nl80211Elements(Vec<Nl80211Element>);
+#[derive(Debug, PartialEq, Eq, Clone, Default)]
+pub struct Nl80211Elements(Vec<Nl80211Element>);
 
 impl<T: AsRef<[u8]> + ?Sized> Parseable<T> for Nl80211Elements {
     fn parse(buf: &T) -> Result<Self, DecodeError> {
@@ -64,6 +65,7 @@ const ELEMENT_ID_CHANNEL: u8 = 3;
 const ELEMENT_ID_COUNTRY: u8 = 7;
 const ELEMENT_ID_HT_CAP: u8 = 45;
 const ELEMENT_ID_RSN: u8 = 48;
+const ELEMENT_ID_EXTENDED_CAPABILITIES: u8 = 127;
 const ELEMENT_ID_VENDOR: u8 = 221;
 
 /// IEEE 802.11-2020 `9.4.2 Elements`
@@ -71,6 +73,7 @@ const ELEMENT_ID_VENDOR: u8 = 221;
 #[non_exhaustive]
 pub enum Nl80211Element {
     Ssid(String),
+    ExtendedCapability(Nl80211ExtendedCapability),
     /// Supported rates in units of 500 kb/s, if necessary rounded up to the
     /// next 500 kb/
     SupportedRatesAndSelectors(Vec<Nl80211RateAndSelector>),
@@ -89,6 +92,7 @@ impl Nl80211Element {
     pub(crate) fn id(&self) -> u8 {
         match self {
             Self::Ssid(_) => ELEMENT_ID_SSID,
+            Self::ExtendedCapability(_) => ELEMENT_ID_EXTENDED_CAPABILITIES,
             Self::SupportedRatesAndSelectors(_) => ELEMENT_ID_SUPPORTED_RATES,
             Self::Channel(_) => ELEMENT_ID_CHANNEL,
             Self::Country(_) => ELEMENT_ID_COUNTRY,
@@ -103,6 +107,7 @@ impl Nl80211Element {
     pub(crate) fn length(&self) -> u8 {
         match self {
             Self::Ssid(v) => v.len() as u8,
+            Self::ExtendedCapability(v) => v.buffer_len() as u8,
             Self::SupportedRatesAndSelectors(v) => v.len() as u8,
             Self::Channel(_) => 1,
             Self::Country(v) => v.buffer_len() as u8,
@@ -130,6 +135,7 @@ impl<T: AsRef<[u8]> + ?Sized> Parseable<T> for Nl80211Element {
                 parse_string(payload)
                     .context(format!("Invalid SSID {payload:?}"))?,
             ),
+            ELEMENT_ID_EXTENDED_CAPABILITIES => Self::ExtendedCapability(Nl80211ExtendedCapability::new(payload)),
             ELEMENT_ID_SUPPORTED_RATES => Self::SupportedRatesAndSelectors(
                 payload
                     .iter()
@@ -160,23 +166,26 @@ impl Emitable for Nl80211Element {
     fn emit(&self, buffer: &mut [u8]) {
         buffer[0] = self.id();
         buffer[1] = self.length();
-        let payload = &mut buffer[2..self.length() as usize + 2];
+        let payload: &mut [u8] = &mut buffer[2..self.length() as usize + 2];
         match self {
             Self::Ssid(s) => {
                 // IEEE 802.11-2020 indicate it is optional to have NULL
                 // terminator for this string.
                 payload.copy_from_slice(s.as_bytes());
             }
+            Self::ExtendedCapability(c) => {
+                c.emit(payload);
+            }
             Self::SupportedRatesAndSelectors(v) => {
                 let raw: Vec<u8> =
                     v.as_slice().iter().map(|v| u8::from(*v)).collect();
                 payload.copy_from_slice(raw.as_slice());
             }
-            Self::Channel(v) => buffer[0] = *v,
-            Self::Country(v) => v.emit(buffer),
-            Self::Rsn(v) => v.emit(buffer),
-            Self::Vendor(v) => buffer[..v.len()].copy_from_slice(v.as_slice()),
-            Self::HtCapability(v) => v.emit(buffer),
+            Self::Channel(v) => payload[0] = *v,
+            Self::Country(v) => v.emit(payload),
+            Self::Rsn(v) => v.emit(payload),
+            Self::Vendor(v) => payload[..v.len()].copy_from_slice(v.as_slice()),
+            Self::HtCapability(v) => v.emit(payload),
             Self::Other(_, data) => {
                 payload.copy_from_slice(data.as_slice());
             }
@@ -258,7 +267,6 @@ impl From<Nl80211RateAndSelector> for u8 {
 }
 
 #[derive(Debug, PartialEq, Eq, Clone)]
-#[non_exhaustive]
 pub struct Nl80211ElementCountry {
     pub country: String,
     pub environment: Nl80211ElementCountryEnvironment,
@@ -862,6 +870,7 @@ impl From<Nl80211AkmSuite> for u32 {
         }
     }
 }
+
 impl Nl80211AkmSuite {
     pub const LENGTH: usize = 4;
 
@@ -990,6 +999,43 @@ impl Nl80211Pmkid {
             let mut raw = [0u8; Self::LENGTH];
             raw.copy_from_slice(&payload[..Self::LENGTH]);
             Ok(Self(raw))
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[repr(u32)]
+pub enum Nl80211AuthType {
+    OpenSystem = 0,
+    SharedKey = 1,
+    FT = 2,
+	NetworkEap = 3,
+	SAE = 4,
+    Other(u32)
+}
+
+impl From<Nl80211AuthType> for u32 {
+    fn from(v: Nl80211AuthType) -> u32 {
+        match v {
+            Nl80211AuthType::OpenSystem => 0,
+            Nl80211AuthType::SharedKey => 1,
+            Nl80211AuthType::FT => 2,
+            Nl80211AuthType::NetworkEap => 3,
+            Nl80211AuthType::SAE => 4,
+            Nl80211AuthType::Other(d) => d
+        }
+    }
+}
+
+impl From<u32> for Nl80211AuthType {
+    fn from(d: u32) -> Self {
+        match d {
+            0 => Self::OpenSystem,
+            1 => Self::SharedKey,
+            2 => Self::FT,
+            3 => Self::NetworkEap,
+            4 => Self::SAE,
+            _ => Self::Other(d),
         }
     }
 }

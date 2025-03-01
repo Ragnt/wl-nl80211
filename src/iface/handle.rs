@@ -43,7 +43,7 @@ impl Nl80211InterfaceHandle {
     /// Register a Frame Type to recieve over the unsolicited socket
     /// an example of this would be if establishing an access point
     pub fn register_frame(&mut self, index: u32, frame_type: Nl80211FrameType) -> Nl80211RegisterFrame {
-        Nl80211RegisterFrame::new(self.0.clone(), index, frame_type)
+        Nl80211RegisterFrame::new(self.0.clone(), index, frame_type, vec![0x00])
     }
     
 }

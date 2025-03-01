@@ -68,6 +68,7 @@ const IEEE80211_HT_CAP_LSIG_TXOP_PROT: u16 = 0x8000;
 
 // For linux kernel `struct  ieee80211_ht_cap.cap_info`
 bitflags::bitflags! {
+    #[repr(transparent)]
     #[derive(Debug, Default, PartialEq, Eq, Clone, Copy)]
     #[non_exhaustive]
     pub struct Nl80211HtCaps: u16 {
@@ -315,17 +316,30 @@ impl Emitable for Nl80211ElementHtCap {
             return;
         }
         let mut offset = 0;
-        self.caps.emit(buffer);
-        offset += self.caps.buffer_len();
-        self.a_mpdu_para.emit(&mut buffer[offset..]);
-        offset += self.a_mpdu_para.buffer_len();
-        self.mcs_set.emit(&mut buffer[offset..]);
-        offset += self.mcs_set.buffer_len();
-        self.ht_ext_cap.emit(&mut buffer[offset..]);
-        offset += self.ht_ext_cap.buffer_len();
-        self.transmit_beamforming_cap.emit(&mut buffer[offset..]);
-        offset += self.transmit_beamforming_cap.buffer_len();
-        self.asel_cap.emit(&mut buffer[offset..]);
+
+        // Correctly slice the buffer for self.caps.emit()
+        let caps_len = self.caps.buffer_len();
+        self.caps.emit(&mut buffer[offset..offset + caps_len]);
+        offset += caps_len;
+
+        let a_mpdu_para_len = self.a_mpdu_para.buffer_len();
+        self.a_mpdu_para.emit(&mut buffer[offset..offset + a_mpdu_para_len]);
+        offset += a_mpdu_para_len;
+
+        let mcs_set_len = self.mcs_set.buffer_len();
+        self.mcs_set.emit(&mut buffer[offset..offset + mcs_set_len]);
+        offset += mcs_set_len;
+
+        let ht_ext_cap_len = self.ht_ext_cap.buffer_len();
+        self.ht_ext_cap.emit(&mut buffer[offset..offset + ht_ext_cap_len]);
+        offset += ht_ext_cap_len;
+
+        let tx_beamforming_cap_len = self.transmit_beamforming_cap.buffer_len();
+        self.transmit_beamforming_cap.emit(&mut buffer[offset..offset + tx_beamforming_cap_len]);
+        offset += tx_beamforming_cap_len;
+
+        let asel_cap_len = self.asel_cap.buffer_len();
+        self.asel_cap.emit(&mut buffer[offset..offset + asel_cap_len]);
     }
 }
 
