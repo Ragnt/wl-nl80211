@@ -2,7 +2,6 @@
 
 use futures::TryStream;
 use netlink_packet_core::{NLM_F_DUMP, NLM_F_REQUEST};
-use netlink_packet_core::{NLM_F_DUMP, NLM_F_REQUEST};
 use netlink_packet_generic::GenlMessage;
 
 use crate::{
@@ -51,21 +50,18 @@ impl Nl80211WiphyGetRequest {
 
     /// Lookup a wiphy by index
     pub fn match_phy_index(mut self, index: u32) -> Self {
-        self.dump = false;
         self.message.attributes.push(Nl80211Attr::Wiphy(index));
         self
     }
 
     /// Lookup a wiphy by index
     pub fn match_iface_index(mut self, index: u32) -> Self {
-        self.dump = false;
         self.message.attributes.push(Nl80211Attr::IfIndex(index));
         self
     }
 
     /// Lookup a wiphy by name
     pub fn match_name(mut self, name: String) -> Self {
-        self.dump = false;
         self.message.attributes.push(Nl80211Attr::WiphyName(name));
         self
     }
